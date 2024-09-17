@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -47,7 +48,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			selected := m.table.Cursor()
 			rows := m.table.Rows()
 			rows[selected][2] = "yes"
-			err := os.RemoveAll(rows[selected][0])
+			err := os.RemoveAll(d + "/" + rows[selected][0])
 			if err != nil {
 				panic(err)
 			}
@@ -77,22 +78,17 @@ func DirSize(path string) (int64, error) {
 }
 
 func scanDirs() ([]table.Row, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-
 	targets := []string{"target", "node_modules"}
 	rows := []table.Row{}
 
-	return rows, filepath.WalkDir(path.Join(wd, d), func(path string, d fs.DirEntry, err error) error {
-		if slices.Contains(targets, d.Name()) && d.IsDir() {
+	return rows, filepath.WalkDir(d, func(path string, dir fs.DirEntry, err error) error {
+		if slices.Contains(targets, dir.Name()) && dir.IsDir() {
 			size, err := DirSize(path)
 			if err != nil {
 				return err
 			}
 			rows = append(rows, table.Row{
-				path,
+				strings.TrimPrefix(path, d+"/"),
 				strconv.FormatInt(size>>20, 10) + "MB",
 				"no",
 			})
@@ -108,6 +104,11 @@ func main() {
 	if len(os.Args) > 1 {
 		d = os.Args[1]
 	}
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	d = path.Join(wd, d)
 
 	columns := []table.Column{
 		{Title: "Name", Width: 60},
