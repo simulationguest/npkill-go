@@ -78,7 +78,7 @@ func DirSize(path string) (int64, error) {
 }
 
 func scanDirs() ([]table.Row, error) {
-	targets := []string{"target", "node_modules"}
+	targets := []string{"target", "venv", "env", "node_modules"}
 	rows := []table.Row{}
 
 	return rows, filepath.WalkDir(d, func(path string, dir fs.DirEntry, err error) error {
