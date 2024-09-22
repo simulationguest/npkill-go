@@ -6,6 +6,16 @@ A clean TUI to delete your old `target` and `node_modules`.
 
 ## Usage
 
+### Installation
+
+#### Go toolchain
+
+`$ go install git.leoj.de/npkill-go`
+
+#### No Go toolchain
+
+Download a binary from the [Releases](https://github.com/simulationguest/npkill-go/releases) tab and place it in your `$PATH`.
+
 ### Starting npkill
 
 `$ npkill <directory>` opens npkill in a directory _relative_ to `$PWD`.
