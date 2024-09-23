@@ -8,5 +8,8 @@ build-all:
 		done \
 	done
 
+install:
+	go install .
 
 .PHONY: build build-all
+.DEFAULT_GOAL: build
