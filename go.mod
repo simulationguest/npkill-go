@@ -1,4 +1,4 @@
-module git.leoj.de/npkill
+module git.leoj.de/npkill-go
 
 go 1.22.1
 
